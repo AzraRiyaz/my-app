@@ -1,136 +1,88 @@
-// src/App.js
-
-import React from 'react';
+import React, { useState } from 'react';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import Modal from './components/Modal'; // Import Modal component
 
 function App() {
-  return (  
+  // State to track hovered gallery item and modal visibility
+  const [hoveredIndex, setHoveredIndex] = useState(null);
+  const [selectedProject, setSelectedProject] = useState(null); // For modal
+
+  // Close the modal
+  const closeModal = () => setSelectedProject(null);
+
+  return (
     <div style={styles.pageContainer}>
-      {/* Sticky Navbar */}
       <Navbar style={styles.navbar} />
-      
+
       <div style={styles.contentWrap}>
-        {/* Home Section */}
-        <section id="home" style={{ ...styles.section, backgroundColor: '#f0f4f8', borderColor: '#d3d3d3' }}>
+        <section id="home" style={{ ...styles.section, backgroundColor: styles.primaryColor, color: styles.textColorLight }}>
           <h1 style={styles.heading}>Welcome to My Portfolio</h1>
-          <p style={styles.paragraph}>A brief introduction to who I am and what I do.</p>
+          <p style={styles.paragraph}>
+            This is the home section where I provide a brief introduction to who I am and what I do.
+          </p>
         </section>
 
-        {/* About Me Section */}
-        <section id="about" style={{ ...styles.section, backgroundColor: '#e8eef1', borderColor: '#d3d3d3' }}>
+        <section id="about" style={{ ...styles.section, backgroundColor: styles.secondaryColor }}>
           <h1 style={styles.heading}>About Me</h1>
           <p style={styles.paragraph}>
-            Hi, I'm [Your Name], a [Your Profession] with a background in computer science and biomedical engineering.
+            Hi, I'm [Your Name], a [Your Profession]. I am passionate about leveraging technology to solve real-world problems...
           </p>
         </section>
 
         {/* Projects Section */}
-        <section id="projects" style={{ ...styles.section, backgroundColor: '#f8f9fa', borderColor: '#d3d3d3' }}>
+        <section id="projects" style={{ ...styles.section, backgroundColor: styles.primaryColor, color: styles.textColorLight }}>
           <h1 style={styles.heading}>My Projects</h1>
           <p style={styles.paragraph}>Here are some of the projects I've worked on:</p>
+
           <div style={styles.gallery}>
-            <div style={styles.galleryItem}>
-              <img src="project1.jpg" alt="Project 1" style={styles.projectImage} />
-              <p><strong>Project 1:</strong> Description of Project 1.</p>
+            {/* Project 1 */}
+            <div
+              style={{
+                ...styles.galleryItem,
+                transform: hoveredIndex === 1 ? 'scale(1.05)' : 'scale(1)',
+                boxShadow: hoveredIndex === 1 ? '0px 4px 20px rgba(0, 0, 0, 0.2)' : 'none',
+              }}
+              onMouseEnter={() => setHoveredIndex(1)}
+              onMouseLeave={() => setHoveredIndex(null)}
+              onClick={() => setSelectedProject(1)} // Open modal on click
+            >
+              <img src="https://s41721.pcdn.co/wp-content/uploads/2021/06/Robots-for-elderly-1.jpg" alt="Neuro Assistant Companion" style={styles.projectImage} />
+              <p style={{ ...styles.paragraph, color: styles.textColorDark }}>
+                <strong>Neuro Assistant Companion:</strong> A chatbot designed to help memory loss patients.
+              </p>
             </div>
-            <div style={styles.galleryItem}>
-              <img src="project2.jpg" alt="Project 2" style={styles.projectImage} />
-              <p><strong>Project 2:</strong> Description of Project 2.</p>
-            </div>
-            <div style={styles.galleryItem}>
-              <img src="project3.jpg" alt="Project 3" style={styles.projectImage} />
-              <p><strong>Project 3:</strong> Description of Project 3.</p>
-            </div>
+            {/* Additional projects go here following the same pattern */}
           </div>
         </section>
 
-        {/* Skills Section */}
-        <section id="skills" style={{ ...styles.section, backgroundColor: '#eef2f3', borderColor: '#d3d3d3' }}>
+        <section id="skills" style={{ ...styles.section, backgroundColor: styles.secondaryColor }}>
           <h1 style={styles.heading}>My Skills</h1>
           <p style={styles.paragraph}>Here are some of my technical and soft skills:</p>
-          <ul style={styles.skillList}>
-            <li><strong>Python & Machine Learning</strong></li>
-            <li><strong>Streamlit & React.js</strong></li>
-            <li><strong>UI/UX Design</strong></li>
+          <ul style={styles.skillsList}>
+            <li><strong>Python & Machine Learning:</strong> Proficient in developing ML models for data-driven applications.</li>
+            {/* Additional skills */}
           </ul>
         </section>
 
-        {/* Contact Section */}
-        <section id="contact" style={{ ...styles.section, backgroundColor: '#f7f9fa', borderColor: '#d3d3d3' }}>
+        <section id="contact" style={{ ...styles.section, backgroundColor: styles.primaryColor, color: styles.textColorLight }}>
           <h1 style={styles.heading}>Contact Me</h1>
           <p style={styles.paragraph}>Feel free to contact me via email at <strong>your-email@example.com</strong>.</p>
         </section>
       </div>
 
-      {/* Sticky Footer */}
       <Footer style={styles.footer} />
+
+      {/* Modal for Project Details */}
+      {selectedProject && (
+        <Modal projectId={selectedProject} onClose={closeModal} />
+      )}
     </div>
   );
 }
 
 const styles = {
-  pageContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    minHeight: '100vh',
-    fontFamily: "'Roboto', sans-serif",
-  },
-  contentWrap: {
-    flex: 1,
-  },
-  section: {
-    padding: '4rem',
-    textAlign: 'center',
-    borderBottom: '2px solid',
-  },
-  heading: {
-    fontSize: '2.5rem',
-    fontWeight: '700',
-    color: '#34495e',
-    marginBottom: '1.5rem',
-  },
-  paragraph: {
-    fontSize: '1.2rem',
-    color: '#555',
-    lineHeight: '1.6',
-    maxWidth: '800px',
-    margin: '0 auto',
-  },
-  gallery: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
-    gap: '1.5rem',
-    marginTop: '2rem',
-  },
-  galleryItem: {
-    border: '1px solid #d3d3d3',
-    borderRadius: '8px',
-    padding: '1rem',
-    textAlign: 'center',
-  },
-  projectImage: {
-    width: '100%',
-    height: 'auto',
-    borderRadius: '8px',
-    marginBottom: '1rem',
-  },
-  skillList: {
-    listStyleType: 'circle',
-    paddingLeft: '1.5rem',
-    textAlign: 'left',
-    margin: '0 auto',
-    maxWidth: '600px',
-  },
-  footer: {
-    width: '100%',
-    backgroundColor: '#2c3e50',
-    color: '#fff',
-    textAlign: 'center',
-    padding: '1.5rem',
-    marginTop: 'auto',
-    fontSize: '1rem',
-  },
+  // ...existing styles here...
 };
 
 export default App;
